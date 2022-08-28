@@ -71,13 +71,20 @@ impl<T: Access> CurrencySchema<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, ProtobufConvert, BinaryValue)]
+#[derive(Serialize, Deserialize, Clone, Debug, ProtobufConvert, BinaryValue, ObjectHash)]
 #[protobuf_convert(source = "proto::TxCreateWallet")]
 pub struct TxCreateWallet {
     pub name: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, ProtobufConvert, BinaryValue)]
+impl TxCreateWallet {
+        /// Creates a wallet with the specified name.
+        pub fn new(name: impl Into<String>) -> Self {
+            Self { name: name.into() }
+        }
+    }
+
+#[derive(Serialize, Deserialize, Clone, Debug, ProtobufConvert, BinaryValue, ObjectHash)]
 #[protobuf_convert(source = "proto::TxTransfer")]
 pub struct TxTransfer {
     pub to: PublicKey,

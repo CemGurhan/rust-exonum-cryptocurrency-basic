@@ -1,11 +1,14 @@
-use exonum_cli::NodeBuilder;
-use failure::Error;
+use exonum_cli::{NodeBuilder, Spec};
+use cryptocurrency::CryptocurrencyService;
 
-use exonum_cryptocurrency::contracts::CryptocurrencyService;
-
-fn main() -> Result<(), Error> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     exonum::helpers::init_logger()?;
+
     NodeBuilder::development_node()?
-        .with_default_rust_service(CryptocurrencyService)
-        .run()
+        // Starts cryptocurrency instance with given id and name
+        // immediately after genesis block creation.
+        .with(Spec::new(CryptocurrencyService).with_default_instance())
+        .run().await
+        
 }
