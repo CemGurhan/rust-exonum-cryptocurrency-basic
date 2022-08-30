@@ -11,6 +11,7 @@ pub struct TxCreateWallet {
     pub name: String,
 }
 
+// this may not be required
 impl TxCreateWallet {
         /// Creates a wallet with the specified name.
         pub fn new(name: impl Into<String>) -> Self {

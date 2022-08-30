@@ -48,6 +48,22 @@ Data will be stored in a key value format the MerkleDB index **MapIndex**. This 
 
 **FromAccess** provides a method known as **from_root**, which can allow us to initialize our **CurrencySchema**. We also create a constructor using this method, to simplify interaction with **CurrencySchema**.
 
+https://exonum.com/doc/version/latest/architecture/merkledb/#mapindex
+
+### **transactions.rs**
+
+Where we define our transactions, which alter our blockchain state. First, we must update our **service.proto** file with the new transaction messages. 
+
+We create two transactions. The **TxCreateWallet** struct validates the create wallet message, whilst the **TxTransfer** struct validates the transferring money between wallets message. The **TxTransfer** struct contains the public key of the reciever. 
+
+Transactions must be **Authorized** and **Authenticated**. In this case, **Authorization** occurs when the owner of a cryptocurrency signs the transfer transaction with a key associated with coins. **Authentication** means verifying that this transaction is signed with a specific key.
+
+https://exonum.com/doc/version/latest/architecture/transactions/
+
+### **service_interface.rs**
+
+
+
 
 
 
