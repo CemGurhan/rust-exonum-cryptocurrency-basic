@@ -1,5 +1,5 @@
 use exonum_cli::{NodeBuilder, Spec};
-use cryptocurrency::CryptocurrencyService;
+use cryptocurrency::service_interface::*;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
