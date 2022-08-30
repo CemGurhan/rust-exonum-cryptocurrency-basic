@@ -2,7 +2,6 @@
 
 ## **proto** 
 
-</br>
 
 ## proto.rs 
 
@@ -13,11 +12,11 @@ Define what data will be stored inside the blockchain. Messages described in thi
 
 Defines where protobuf generated rust files (which are used for data serialization and deserialization) are outputed (output to **protobuf_mod.rs**).
 
-</br>
+
 
 ## **root**
 
-</br>
+
 
 ## build.rs
 
@@ -25,11 +24,11 @@ Where we introduce a main function to generate rust files from proto description
 
 The dependency **ProtobufGenerator** generates the corresponding rs files from our proto definitions.  
 
-</br>
+
 
 ## **src**
 
-</br>
+
 
 ## lib.rs
 
