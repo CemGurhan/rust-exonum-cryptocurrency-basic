@@ -40,7 +40,7 @@ We also define an implementation of wallet methods, where one is used to increas
 
 ### **schema.rs**
 
-Where provide a structured view of data storage. We dont access the storage directly, but instead we use **Access**. **Access** wraps udnerlying data access types like **Snapshot** (which provides an immutable view of data in our db) and **Fork** (which provides a mutable view of data in our db).
+Where we provide a structured view of data storage. We dont access the storage directly, but instead we use **Access**. **Access** wraps udnerlying data access types like **Snapshot** (which provides an immutable view of data in our db) and **Fork** (which provides a mutable view of data in our db).
 
 Our structured view of wallets in **schema.rs** is identical to the layout of the db in storage, so we dont need to write code to connect it to our db. Instead, we use the **FromAccess** trait from the **exonum_derive** dependency to generate this code for us.
 
@@ -62,7 +62,31 @@ https://exonum.com/doc/version/latest/architecture/transactions/
 
 ### **service_interface.rs**
 
+Here we declare a service interface (called **CryptocurrencyInterface**) to support the previously described transactions. Like smart contracts in other blockchain platforms, services provide the business logic of the application. It's essentially what defines transaction functionality. 
 
+The **CryptocurrencyInterface** is what allows us to communicate with the external world, with it's implementation allowing us to transfer money between wallets, or to create new walllets. Calls made to service methods must produce an identical result on all nodes in the network given the same blockchain state. 
+
+**exonum_interface** allows us to dispatch transactions and deserialize their payloads within the service (most probably due to transactions being recieved as protobuf messages). **interface_method** will specify an ID for each transaction method. Each ID should be unique. Each transaction method should have a signiture of the following format:
+
+```
+fn create_wallet(&self, ctx: Ctx, arg: TxCreateWallet) -> Self::Output;
+```
+We implement our service interface by actually declaring a service (which is a struct that we call **CryptocurrencyService**), and then use this to implement the **CryptocurrencyInterface** trait that represents the service interface. **service_dispatcher** collects info about interfaces implemented by our service, and **service_factory** generates code to create instances of our service.
+
+
+We also define a struct called **Service**, which implements traits defined by rust runtime. Implementation of this trait contains additional information on the service lifecycle, like wiring our API.
+
+We now begin implementing the methods defined in our service interface (**CryptocurrencyInterface**) using our **CryptocurrencyService**. We define our first transactions logic, which is creating a wallet. Here we check if a wallet exists, and add a new wallet if it doesnt. 
+
+
+
+https://exonum.com/doc/version/latest/architecture/services/
+
+https://docs.rs/exonum-rust-runtime/latest/exonum_rust_runtime/
+
+### **errors.rs**
+
+Where we define erros regarding blockchain transaction failure. 
 
 
 

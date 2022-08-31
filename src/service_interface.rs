@@ -48,7 +48,8 @@ impl CryptocurrencyInterface<ExecutionContext<'_>> for CryptocurrencyService {
         let author = context
             .caller()
             .author()
-            .expect("Wrong 'TxCreateWallet' initiator");
+            .expect("Wrong 'TxCreateWallet' initiator"); // Calling expect in the code above is not really suitable for production use. In actual services consider using CallerAddress for better forward compatibility.
+
 
         let mut schema = CurrencySchema::new(context.service_data());
         if schema.wallets.get(&author).is_none() {
