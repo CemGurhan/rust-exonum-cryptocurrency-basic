@@ -78,7 +78,9 @@ We also define a struct called **Service**, which implements traits defined by r
 
 We now begin implementing the methods defined in our service interface (**CryptocurrencyInterface**) using our **CryptocurrencyService**. We define our first transactions logic, which is creating a wallet. Here we check if a wallet exists, and add a new wallet if it doesnt. 
 
+This transaction also sets the wallet balance to 100. To work with our db, we instatsiate **CurrencySchema** (defined in schema.rs) using the **service_data** method of **ExecutionContext**.
 
+We then begin defining how to transfer money between wallets. We first check to see if wallets on both sides exist, check the balance of the sender to see if they have enough tokens, and then decrease their token amount while increasing that of the reciever. There also needs to be a check to make sure that a sender doesnt send money to themselves.
 
 https://exonum.com/doc/version/latest/architecture/services/
 
@@ -87,6 +89,33 @@ https://docs.rs/exonum-rust-runtime/latest/exonum_rust_runtime/
 ### **errors.rs**
 
 Where we define erros regarding blockchain transaction failure. 
+
+### **cryptoapi.rs**
+
+We now implement the node API. We declare a blank struct called **CryptoCurrencyApi**, which will include methods that correspond to different types of requests.
+
+We want to implement 2 read requests for **CryptocurrencyService**. This requests must return info of all wallets in the system, and of a specific wallet using a public key. We do this by defining these methods in our **CryptocurencyApi**, which use **state** to read info from blockchain storage. The **state** contains an interface known as **ServiceApiState** to access blockchain data.
+
+We also define a helper struct, called **WalletQuery**. This structure describes the query parameters for the **get_wallet** endpoint, (**pub_key**). 
+
+These read methods have an idiomatic signiture, just like the transaction endpoints.
+
+Read request endpoint signiture:
+
+```
+fn(&ServiceApiState<'_>, Query) -> api::Result<Response>;
+```
+
+Transaction endpoints signiture: 
+
+```
+fn create_wallet(&self, ctx: Ctx, arg: TxCreateWallet) -> Self::Output;
+```
+This allows for easy to udnerstand and repoduce code between different developers.
+
+Inside our **CryptocurrencyApi** struct impl, we add in a helper (**called wire**) to help wire the API with endpoints. We then tie the request processing logic to the specific endpoints by adding a **wire_api** method to our **Service** impl in **service_interface.rs**. This will call the **wire** method that we just added to our **CryptocurrencyAPi** struct.
+
+
 
 
 
